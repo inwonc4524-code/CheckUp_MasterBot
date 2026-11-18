@@ -210,7 +210,7 @@ def send_ntfy(title, message, click=None, priority=3, tags=None):
 
 
 def send_telegram(title, message, click=None, priority=3):
-    text = f"<b>{htmllib.escape(title)}</b>\n{htmllib.escape(message)}"
+    text = f"<b>{htmllib.escape(title)}</b>\n\n{htmllib.escape(message)}"
     if len(text) > 4000:
         text = text[:4000] + "…"
     for chat_id in TG_CHATS:
@@ -385,9 +385,10 @@ def main():
     today = NOW.astimezone(KST).date().isoformat()
     if force_report or (NOW.astimezone(KST).hour >= SUMMARY_HOUR and state.get("summary_date") != today):
         head = "모두 정상 👍 (시각 = 마지막 정상 실행)" if not current else f"확인 필요 {len(current)}건 (시각 = 마지막 정상 실행)"
-        body = head + "\n" + "\n".join(lines)
+        # 한 줄씩 띄워서 읽기 쉽게
+        body = head + "\n\n" + "\n\n".join(lines)
         if current:
-            body += "\n─────\n" + "\n".join(f"• {v['name']}: {v['kind']}" for v in current.values())
+            body += "\n\n─────\n\n" + "\n\n".join(f"• {v['name']}: {v['kind']}" for v in current.values())
         notify(f"🩺 봇 점검 요약 ({NOW.astimezone(KST).strftime('%m/%d')})", body, priority=3, tags=["stethoscope"])
         if not force_report:
             state["summary_date"] = today
