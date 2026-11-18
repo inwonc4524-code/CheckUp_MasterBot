@@ -210,7 +210,7 @@ def send_ntfy(title, message, click=None, priority=3, tags=None):
 
 
 def send_telegram(title, message, click=None, priority=3):
-    text = f"<b>{htmllib.escape(title)}</b>\n\n{htmllib.escape(message)}"
+    text = f"<b>{htmllib.escape(title)}</b>\n{htmllib.escape(message)}"
     if len(text) > 4000:
         text = text[:4000] + "…"
     for chat_id in TG_CHATS:
@@ -267,7 +267,7 @@ def check_bot(owner, bot, state, issues):
         issues.append((f"access:{repo}", name, "점검 불가",
                        f"GitHub에서 이 봇을 읽을 수 없어요 ({e}). CHECKUP_TOKEN 권한에 이 저장소가 들어 있는지 확인해 주세요.",
                        f"https://github.com/{owner}/{repo}"))
-        return f"❓ {name}: 읽기 실패"
+        return f"❓ {name} · 읽기 실패"
 
     pushed = parse_time(info["pushed_at"])
     if NOW - pushed > dt.timedelta(days=STALE_REPO_DAYS):
@@ -342,9 +342,9 @@ def check_bot(owner, bot, state, issues):
                 bad += 1
 
     if n_sched == 0:
-        return f"➖ {name}: 예약 실행 작업 없음"
-    when = f"마지막 정상 {kst(last_ok)}" if last_ok else "정상 실행 기록 없음"
-    return (f"✅ {name}: {when}" if bad == 0 else f"⚠️ {name}: 문제 {bad}건 · {when}")
+        return f"➖ {name} · 예약 실행 없음"
+    when = kst(last_ok) if last_ok else "기록 없음"
+    return (f"✅ {name} · {when}" if bad == 0 else f"⚠️ {name} · 문제 {bad}건")
 
 
 def main():
@@ -364,7 +364,7 @@ def main():
         try:
             lines.append(check_bot(owner, bot, state, issues))
         except ApiError as e:
-            lines.append(f"❓ {bot['name']}: 점검 중 오류")
+            lines.append(f"❓ {bot['name']} · 점검 중 오류")
             print("  점검 중 오류:", e)
 
     # 새로 생긴 문제 → 바로 알림 (같은 문제가 계속되는 동안은 다시 안 보내요. 아침 요약에서 다시 알려줘요)
@@ -384,10 +384,10 @@ def main():
     # 매일 아침 요약
     today = NOW.astimezone(KST).date().isoformat()
     if force_report or (NOW.astimezone(KST).hour >= SUMMARY_HOUR and state.get("summary_date") != today):
-        head = "모든 봇이 정상이에요 👍" if not current else f"지금 확인이 필요한 문제 {len(current)}건이 있어요."
-        body = head + "\n\n" + "\n".join(lines)
+        head = "모두 정상 👍 (시각 = 마지막 정상 실행)" if not current else f"확인 필요 {len(current)}건 (시각 = 마지막 정상 실행)"
+        body = head + "\n" + "\n".join(lines)
         if current:
-            body += "\n\n[진행 중인 문제]\n" + "\n".join(f"- {v['name']}: {v['kind']}" for v in current.values())
+            body += "\n─────\n" + "\n".join(f"• {v['name']}: {v['kind']}" for v in current.values())
         notify(f"🩺 봇 점검 요약 ({NOW.astimezone(KST).strftime('%m/%d')})", body, priority=3, tags=["stethoscope"])
         if not force_report:
             state["summary_date"] = today
