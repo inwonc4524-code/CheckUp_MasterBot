@@ -6,11 +6,11 @@
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 44391990433,
+   "run": 44401776042,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
-   "run": 44381275399,
+   "run": 44389747215,
    "problems": []
   },
   "Investment_NotiBot/history.yml": {
@@ -50,5 +50,5 @@
    "problems": []
   }
  },
- "last_run": "2026-11-19T05:34+09:00"
+ "last_run": "2026-11-19T06:29+09:00"
 }
