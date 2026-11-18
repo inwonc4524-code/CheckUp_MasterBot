@@ -1,0 +1,67 @@
+name: 봇 점검·검증
+
+on:
+  schedule:
+    # 1시간마다 (매시 41분, UTC 기준이지만 '매시'라서 한국 시간도 매시 41분)
+    - cron: "41 * * * *"
+  workflow_dispatch:
+    inputs:
+      report:
+        description: "지금 바로 전체 상태 요약 받기"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: checkup-masterbot
+  cancel-in-progress: false
+
+jobs:
+  checkup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 필요한 도구 설치
+        run: pip install -r requirements.txt
+
+      - name: 봇 점검
+        env:
+          CHECKUP_TOKEN: ${{ secrets.CHECKUP_TOKEN }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.report }}" = "true" ]; then
+            ARGS="--report"
+          fi
+          python checkup.py $ARGS
+
+      - name: 점검 기록 저장
+        if: always()
+        run: |
+          [ -f state.json ] || exit 0
+          git config user.name "checkup-masterbot"
+          git config user.email "checkup-masterbot@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet && exit 0
+          git commit -m "점검 기록 업데이트"
+          for i in 1 2 3; do
+            git push && exit 0
+            cp state.json /tmp/state.json
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/state.json state.json
+            git add state.json
+            git commit -m "점검 기록 업데이트" || exit 0
+            sleep 3
+          done
+          exit 1

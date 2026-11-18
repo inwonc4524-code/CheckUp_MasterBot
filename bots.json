@@ -1,0 +1,12 @@
+{
+  "_설명": "점검할 봇 명단이에요. 봇을 새로 만들면 아래에 한 줄 추가하면 돼요. (repo = GitHub 저장소 이름, name = 알림에 보일 이름)",
+  "owner": "inwonc4524-code",
+  "bots": [
+    {"repo": "cheongyak-bot",        "name": "청약 알림 봇"},
+    {"repo": "Lighting_Job_NotiBot", "name": "라이팅 구인 봇"},
+    {"repo": "Investment_NotiBot",   "name": "주식뉴스알림 봇"},
+    {"repo": "Market_Cycle_Bot",     "name": "사이클 봇"},
+    {"repo": "Investment_Forecast",  "name": "ETF 봇"},
+    {"repo": "Stock_Forecast",       "name": "개별종목 봇"}
+  ]
+}
