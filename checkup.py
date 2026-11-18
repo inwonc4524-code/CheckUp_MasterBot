@@ -9,6 +9,8 @@
 [검증]
   4. 숨은 실패   : 실행은 '성공'인데 실행 기록(로그) 안에 알림 전송 실패·프로그램 오류가 있는지
   5. 숨은 단계 실패 : 실패해도 넘어가게 해둔 단계가 실패했는지
+  6. 0건 감지    : 봇이 남긴 health.json 을 보고, 사이트에서 읽은 전체 공고 수가
+                   오래(기본 24시간) 0건이거나 오류가 이어지면 '고장 의심'
 
 문제가 생기면 ntfy + 텔레그램으로 바로 알려주고, 고쳐지면 '복구' 알림을 보내요.
 같은 문제로 알림이 계속 반복되지 않게 state.json 에 기억해요.
@@ -257,6 +259,37 @@ def parse_time(s):
     return dt.datetime.fromisoformat(s.replace("Z", "+00:00"))
 
 
+def check_health(owner, repo, name, issues):
+    """봇이 health.json 을 남기면 사이트별 '읽은 개수'를 확인해요. 없으면 건너뛰어요."""
+    try:
+        meta = api(f"/repos/{owner}/{repo}/contents/health.json")
+    except ApiError:
+        return 0
+    try:
+        h = json.loads(base64.b64decode(meta.get("content", "")).decode("utf-8"))
+    except (ValueError, TypeError):
+        return 0
+    limit = dt.timedelta(hours=float(h.get("alert_hours", 24)))
+    link = f"https://github.com/{owner}/{repo}/blob/main/health.json"
+    bad = 0
+    for src, v in (h.get("sources") or {}).items():
+        for field, kind, what in (("zero_since", "0건 지속", "읽은 공고가 0건"),
+                                  ("error_since", "사이트 오류 지속", "읽기 오류")):
+            since = v.get(field)
+            if not since:
+                continue
+            t = parse_time(since)
+            if NOW - t >= limit:
+                hours = int((NOW - t).total_seconds() // 3600)
+                last = v.get("last_good")
+                issues.append((f"health:{repo}/{src}/{field}", name, kind,
+                               f"'{src}'에서 {what}인 상태가 {hours}시간째 이어져요. 사이트가 바뀌었을 수 있어요."
+                               + (f"\n마지막으로 정상으로 읽은 때: {kst(parse_time(last))}" if last else "")
+                               + (f"\n상태: {v.get('status')}" if field == "error_since" else ""), link))
+                bad += 1
+    return bad
+
+
 def check_bot(owner, bot, state, issues):
     """봇 하나를 점검해서 '지금 있는 문제'를 issues 에 넣고, 상태 요약 한 줄을 돌려줘요."""
     repo, name = bot["repo"], bot["name"]
@@ -340,6 +373,8 @@ def check_bot(owner, bot, state, issues):
                                f"'{wname}' 작업은 성공으로 끝났지만 기록 안에 문제가 있어요:\n- " + "\n- ".join(probs[:4]),
                                latest["html_url"]))
                 bad += 1
+
+    bad += check_health(owner, repo, name, issues)
 
     if n_sched == 0:
         return f"➖ {name} · 예약 실행 없음"
