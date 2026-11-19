@@ -6,15 +6,15 @@
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 44589985847,
+   "run": 44601477773,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
-   "run": 44584384706,
+   "run": 44601363149,
    "problems": []
   },
   "Investment_NotiBot/history.yml": {
-   "run": 44382481922,
+   "run": 44600893490,
    "problems": []
   },
   "Investment_NotiBot/news_bot.yml": {
@@ -22,7 +22,7 @@
    "problems": []
   },
   "Investment_NotiBot/stats.yml": {
-   "run": 44576395277,
+   "run": 44607427885,
    "problems": []
   },
   "Market_Cycle_Bot/cycle-bot.yml": {
@@ -50,6 +50,6 @@
    "problems": []
   }
  },
- "last_run": "2026-11-20T04:40+09:00",
+ "last_run": "2026-11-20T05:34+09:00",
  "summary_date": "2026-11-19"
 }
