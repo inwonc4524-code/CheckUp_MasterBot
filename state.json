@@ -2,15 +2,15 @@
  "active": {},
  "scanned": {
   "cheongyak-bot/bot.yml": {
-   "run": 44702572614,
+   "run": 44725839992,
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 44712096458,
+   "run": 44720892200,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
-   "run": 44710965312,
+   "run": 44717822683,
    "problems": []
   },
   "Investment_NotiBot/history.yml": {
@@ -22,7 +22,7 @@
    "problems": []
   },
   "Investment_NotiBot/stats.yml": {
-   "run": 44703347425,
+   "run": 44726486402,
    "problems": []
   },
   "Market_Cycle_Bot/cycle-bot.yml": {
@@ -30,7 +30,7 @@
    "problems": []
   },
   "Market_Cycle_Bot/final-alert.yml": {
-   "run": 44713391915,
+   "run": 44726866641,
    "problems": []
   },
   "Investment_Forecast/etf-bot.yml": {
@@ -50,6 +50,6 @@
    "problems": []
   }
  },
- "last_run": "2026-11-20T19:34+09:00",
+ "last_run": "2026-11-20T20:32+09:00",
  "summary_date": "2026-11-20"
 }
