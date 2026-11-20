@@ -6,11 +6,11 @@
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 44720892200,
+   "run": 44729016466,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
-   "run": 44717822683,
+   "run": 44724867151,
    "problems": []
   },
   "Investment_NotiBot/history.yml": {
@@ -18,7 +18,7 @@
    "problems": []
   },
   "Investment_NotiBot/news_bot.yml": {
-   "run": 44700477314,
+   "run": 44731482665,
    "problems": []
   },
   "Investment_NotiBot/stats.yml": {
@@ -30,7 +30,7 @@
    "problems": []
   },
   "Market_Cycle_Bot/final-alert.yml": {
-   "run": 44726866641,
+   "run": 44729952819,
    "problems": []
   },
   "Investment_Forecast/etf-bot.yml": {
@@ -50,6 +50,6 @@
    "problems": []
   }
  },
- "last_run": "2026-11-20T20:32+09:00",
+ "last_run": "2026-11-20T21:35+09:00",
  "summary_date": "2026-11-20"
 }
