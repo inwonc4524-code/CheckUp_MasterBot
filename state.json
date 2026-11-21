@@ -2,11 +2,11 @@
  "active": {},
  "scanned": {
   "cheongyak-bot/bot.yml": {
-   "run": 44855065015,
+   "run": 44869232076,
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 44862658420,
+   "run": 44867293900,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
@@ -22,7 +22,7 @@
    "problems": []
   },
   "Investment_NotiBot/stats.yml": {
-   "run": 44855369773,
+   "run": 44870045393,
    "problems": []
   },
   "Market_Cycle_Bot/cycle-bot.yml": {
@@ -50,6 +50,6 @@
    "problems": []
   }
  },
- "last_run": "2026-11-21T13:34+09:00",
+ "last_run": "2026-11-21T14:33+09:00",
  "summary_date": "2026-11-21"
 }
