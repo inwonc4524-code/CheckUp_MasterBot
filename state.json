@@ -2,15 +2,15 @@
  "active": {},
  "scanned": {
   "cheongyak-bot/bot.yml": {
-   "run": 45553043520,
+   "run": 45578261628,
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 45566639666,
+   "run": 45578641994,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
-   "run": 45565864165,
+   "run": 45579271445,
    "problems": []
   },
   "Investment_NotiBot/history.yml": {
@@ -18,23 +18,23 @@
    "problems": []
   },
   "Investment_NotiBot/news_bot.yml": {
-   "run": 45564365239,
+   "run": 45576056661,
    "problems": []
   },
   "Investment_NotiBot/stats.yml": {
-   "run": 45559972382,
+   "run": 45571537609,
    "problems": []
   },
   "Market_Cycle_Bot/cycle-bot.yml": {
-   "run": 45503370499,
+   "run": 45585749806,
    "problems": []
   },
   "Market_Cycle_Bot/final-alert.yml": {
-   "run": 45386761283,
+   "run": 45588441420,
    "problems": []
   },
   "Investment_Forecast/etf-bot.yml": {
-   "run": 45572498341,
+   "run": 45587548936,
    "problems": []
   },
   "Investment_Forecast/universe.yml": {
@@ -42,7 +42,7 @@
    "problems": []
   },
   "Stock_Forecast/stock-bot.yml": {
-   "run": 45503003590,
+   "run": 45587527396,
    "problems": []
   },
   "Stock_Forecast/universe.yml": {
@@ -58,6 +58,6 @@
    "problems": []
   }
  },
- "last_run": "2026-11-25T17:04+09:00",
+ "last_run": "2026-11-25T18:49+09:00",
  "summary_date": "2026-11-25"
 }
