@@ -31,6 +31,12 @@ from pathlib import Path
 
 import requests
 
+try:  # 제안 기능 — 없거나 고장 나도 점검은 그대로 돌아가요
+    import advisor
+except Exception as e:  # noqa: BLE001
+    print("제안 기능을 불러오지 못했어요 (점검은 계속해요):", e)
+    advisor = None
+
 KST = dt.timezone(dt.timedelta(hours=9))
 UTC = dt.timezone.utc
 HERE = Path(__file__).parent
@@ -48,6 +54,7 @@ STALE_REPO_DAYS = 50                 # 저장소 활동이 이만큼 없으면 �
 
 NOW = dt.datetime.now(UTC)
 NOTIFY_ERRORS = []
+RUNS_CACHE = {}   # 점검 때 읽은 실행 기록을 제안 기능이 다시 써요 (GitHub에 두 번 안 물어보게)
 
 # 로그에서 찾을 '숨은 실패' 표시들
 SERIOUS_PATTERNS = [
@@ -326,6 +333,7 @@ def check_bot(owner, bot, state, issues):
             continue
 
         runs = api(f"/repos/{owner}/{repo}/actions/workflows/{wf['id']}/runs?per_page=15").get("workflow_runs", [])
+        RUNS_CACHE[(repo, name, wname, link)] = runs
         completed = [r for r in runs if r["status"] == "completed" and r["conclusion"] not in ("skipped", "cancelled")]
         latest = completed[0] if completed else None
 
@@ -408,7 +416,13 @@ def main():
         current[key] = {"name": name, "kind": kind, "msg": msg, "link": link}
         if key in active:
             continue
-        notify(f"🚨 {name} — {kind}", msg, link, priority=4, tags=["rotating_light"])
+        tip = ""
+        if advisor:
+            try:
+                tip = advisor.tip_for(kind)
+            except Exception:  # noqa: BLE001
+                tip = ""
+        notify(f"🚨 {name} — {kind}", msg + tip, link, priority=4, tags=["rotating_light"])
 
     # 사라진 문제 → 복구 알림
     for key, prev in active.items():
@@ -419,11 +433,24 @@ def main():
     # 매일 아침 요약
     today = NOW.astimezone(KST).date().isoformat()
     if force_report or (NOW.astimezone(KST).hour >= SUMMARY_HOUR and state.get("summary_date") != today):
+        # 하루 한 번: 아직 고장은 아니지만 손봐야 할 것 찾기 (실패해도 요약은 그대로 가요)
+        advice_line = ""
+        if advisor:
+            try:
+                to_send, resolved, n_open = advisor.find_advice(api, CONFIG, RUNS_CACHE, state, NOW, KST)
+                if to_send or resolved:
+                    notify(f"💡 봇 개선 제안 ({NOW.astimezone(KST).strftime('%m/%d')})",
+                           advisor.format_advice(to_send, resolved), priority=3, tags=["bulb"])
+                advice_line = f"\n\n💡 지켜보는 개선 제안 {n_open}건" if n_open else "\n\n💡 개선 제안 없음"
+            except Exception as e:  # noqa: BLE001
+                print("제안 기능 오류 (점검은 정상):", e)
+                advice_line = "\n\n💡 오늘은 제안 기능에 오류가 있었어요 (점검은 정상)"
         head = "모두 정상 👍 (시각 = 마지막 정상 실행)" if not current else f"확인 필요 {len(current)}건 (시각 = 마지막 정상 실행)"
         # 한 줄씩 띄워서 읽기 쉽게
         body = head + "\n\n" + "\n\n".join(lines)
         if current:
             body += "\n\n─────\n\n" + "\n\n".join(f"• {v['name']}: {v['kind']}" for v in current.values())
+        body += advice_line
         notify(f"🩺 봇 점검 요약 ({NOW.astimezone(KST).strftime('%m/%d')})", body, priority=3, tags=["stethoscope"])
         if not force_report:
             state["summary_date"] = today
