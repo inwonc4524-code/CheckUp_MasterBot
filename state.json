@@ -6,7 +6,7 @@
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 46113293786,
+   "run": 46117930281,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
@@ -58,7 +58,7 @@
    "problems": []
   }
  },
- "last_run": "2026-11-28T15:35+09:00",
+ "last_run": "2026-11-28T16:52+09:00",
  "summary_date": "2026-11-28",
  "xcheck_seen": {
   "Investment_Forecast": {
