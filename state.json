@@ -1,12 +1,19 @@
 {
- "active": {},
+ "active": {
+  "fail:Investment_NotiBot/stats.yml": {
+   "name": "주식뉴스알림 봇",
+   "kind": "실행 실패",
+   "msg": "'테마별 뉴스 통계' 작업이 11/28 16:41 실행에서 실패했어요.",
+   "link": "https://github.com/inwonc4524-code/Investment_NotiBot/actions/runs/46122380325"
+  }
+ },
  "scanned": {
   "cheongyak-bot/bot.yml": {
-   "run": 46111097791,
+   "run": 46125381272,
    "problems": []
   },
   "Lighting_Job_NotiBot/job_bot.yml": {
-   "run": 46117930281,
+   "run": 46127811150,
    "problems": []
   },
   "Investment_NotiBot/breaking.yml": {
@@ -18,7 +25,7 @@
    "problems": []
   },
   "Investment_NotiBot/news_bot.yml": {
-   "run": 46105636652,
+   "run": 46124242330,
    "problems": []
   },
   "Investment_NotiBot/stats.yml": {
@@ -58,7 +65,7 @@
    "problems": []
   }
  },
- "last_run": "2026-11-28T16:52+09:00",
+ "last_run": "2026-11-28T18:29+09:00",
  "summary_date": "2026-11-28",
  "xcheck_seen": {
   "Investment_Forecast": {
